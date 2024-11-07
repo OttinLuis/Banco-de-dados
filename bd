@@ -1,0 +1,197 @@
+--Grupo: Luiz Felipe, Otto Luis, Victor Raphael
+
+--Questão 1
+
+select *
+from categorias c
+join produtos p on c.id_categoria = p.id_categoria 
+where c.id_categoria = 4;
+
+--Questão 2
+
+select *
+from clientes c
+where c.pais = 'Brasil';
+
+--Questão 3
+
+select *
+from pedidos p 
+where p.data_pedido > '20210901';
+
+--Questão 4
+
+select *
+from produtos p
+where p.quantidade_estoque = 0;
+
+--Questão 5
+
+select *
+from produtos p 
+where p.preco > 50;
+
+--Questão 6
+
+select *
+from produtos p 
+where p.preco >= 10 and p.preco <= 50; --usar também o 'between'
+
+--Questão 7
+
+select *
+from clientes c 
+where c.pais = 'Alemanha' or c.pais = 'Brasil' or c.pais = 'França'; --usar também o 'in'
+
+--Questão 8
+
+select *
+from pedidos p 
+where p.data_pedido between '20210701' and '20210831';
+
+--Questão 9
+
+select c.nome_cliente, p.id_pedido, p.data_pedido
+from pedidos p 
+inner join clientes c on c.id_cliente = p.id_cliente;
+
+--Questão 10
+
+select p.nome_produto, dp.*
+from detalhes_pedidos dp 
+join produtos p on dp.id_produto = p.id_produto;
+
+--Questão 11
+
+select p.nome_produto, p.id_produto, dp.quantidade, dp.id_pedido
+from detalhes_pedidos dp 
+join pedidos p2  on dp.id_pedido = p2.id_pedido
+join produtos p on dp.id_produto = p.id_produto 
+where p2.id_pedido = '10250';
+
+--Questão 12
+
+select * 
+from categorias c 
+join produtos p on c.id_categoria = p.id_categoria 
+where c.id_categoria = 6;
+
+--Questão 13
+
+insert into clientes(nome_cliente, cidade, pais)
+values ('Casa de Produtos Naturais', 'Curitiba', 'Brasil')
+
+--Questão 14
+
+insert into produtos(nome_produto, id_categoria, quantidade_estoque, preco)
+values ('Doce de Leite Artesanal', 3, 100, 12.50)
+
+--Questão 15
+
+update produtos
+set quantidade_estoque = 50
+where nome_produto like 'Queijo Manchego La Pastora'
+
+--Questão 16
+
+update clientes
+set endereco = 'Rua Nova, 456, São Paulo'
+where nome_cliente like 'Comercio Mineiro'
+
+--Questão 17
+
+update produtos
+set preco = preco * 1.10
+where id_categoria = 4
+
+--Questão 18
+
+select * from produtos p 
+
+delete from  produtos p
+where p.nome_produto = 'Chocolate Belga'
+
+--Questão 19
+
+delete from pedidos 
+where data_pedido < '2021-01-01'
+
+--Questão 20
+
+select p.data_pedido, c.nome_contato, c.codigo_postal
+from pedidos p
+inner join  clientes c on c.id_cliente = p.id_cliente
+where p.data_pedido between '20220101' and '20221231'
+
+--Questão 21
+
+select p.nome_produto, p.id_produto 
+from produtos p 
+left join detalhes_pedidos dp  on dp.id_produto = p.id_produto 
+where dp.id_produto is null
+
+--Questão 22
+
+select p.id_pedido, p2.nome_produto, c.nome_cliente, p2.preco
+from pedidos p 
+inner join detalhes_pedidos dp on dp.id_pedido = p.id_pedido 
+inner join produtos p2 on p2.id_produto = dp.id_produto 
+inner join clientes c on c.id_cliente = p.id_cliente 
+where preco > 100.00;
+
+--Questão 23
+
+select c.nome_categoria, c.id_categoria, count(p.id_categoria) as quantidade_categoria
+from produtos p
+join categorias c on p.id_categoria = c.id_categoria 
+group by c.id_categoria 
+having count(p.id_categoria) > 0;
+
+--Questão 24
+
+select sum(p.quantidade_estoque)
+from produtos p
+
+--Questão 25
+
+select avg(p.preco) ::numeric(10,2)
+from produtos p
+where p.quantidade_estoque > 10
+
+--Questão 26
+
+select min(p.quantidade_estoque)
+from produtos p
+,
+--Questão 27
+
+select max(p.preco)
+from produtos p 
+where p.id_categoria = 3
+
+--Questão 28
+
+select c.id_categoria, count(p.id_produto) as total_produtos
+from categorias c 
+join produtos p on c.id_categoria = p.id_categoria 
+group by c.id_categoria
+having count(p.id_produto) > 5;
+
+--Questão 29
+
+select c.pais, count(p.id_pedido) as total_pedido
+from pedidos p 
+join clientes c ON c.id_cliente = p.id_cliente 
+group by c.pais
+having count(p.id_pedido) > 0;
+
+--Questão 30
+
+select c.nome_cliente as nome_cliente, cat.nome_categoria as nome_categoria, sum(dp.quantidade * p.preco) as total_gasto
+from clientes c
+join pedidos pd on c.id_cliente = pd.id_cliente
+join detalhes_pedidos dp on pd.id_pedido = dp.id_pedido
+join produtos p on dp.id_produto = p.id_produto
+join categorias cat on p.id_categoria = cat.id_categoria
+where cat.id_categoria = 3
+group by c.nome_cliente , cat.nome_categoria ;
